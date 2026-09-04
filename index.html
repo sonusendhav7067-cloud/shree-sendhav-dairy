@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shree Sendhav Dairy</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f3f6fa;
+ color:#172033;
+}
+.header{
+ background:#123b73;
+ color:white;
+ padding:18px;
+ text-align:center;
+}
+.header h1{margin:0;font-size:25px}
+.container{padding:15px;max-width:1000px;margin:auto}
+
+.menu{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:10px;
+ margin-bottom:15px;
+}
+.menu button{
+ padding:16px 8px;
+ border:0;
+ border-radius:10px;
+ background:#123b73;
+ color:white;
+ font-size:16px;
+ font-weight:bold;
+}
+
+.card{
+ background:white;
+ padding:16px;
+ border-radius:12px;
+ margin-bottom:15px;
+ box-shadow:0 2px 8px #0002;
+}
+
+h2{margin-top:0;color:#123b73}
+
+input,select{
+ width:100%;
+ padding:12px;
+ margin:6px 0 12px;
+ border:1px solid #ccd4df;
+ border-radius:8px;
+ font-size:16px;
+}
+
+.save{
+ width:100%;
+ padding:14px;
+ background:#16833b;
+ color:white;
+ border:0;
+ border-radius:8px;
+ font-size:17px;
+ font-weight:bold;
+}
+
+.hidden{display:none}
+
+.stats{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:10px;
+}
+
+.stat{
+ background:#eef4fb;
+ padding:15px;
+ border-radius:10px;
+}
+
+.stat b{
+ display:block;
+ font-size:23px;
+ margin-top:5px;
+}
+
+@media(min-width:700px){
+ .menu{grid-template-columns:repeat(4,1fr)}
+ .stats{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>Shree Sendhav Dairy</h1>
+<div>Milk Collection Software</div>
+</div>
+
+<div class="container">
+
+<div class="menu">
+<button onclick="show('dashboard')">🏠 Dashboard</button>
+<button onclick="show('farmer')">👨‍🌾 Farmer</button>
+<button onclick="show('milk')">🥛 Milk Entry</button>
+<button onclick="show('report')">📊 Reports</button>
+</div>
+
+<div id="dashboard" class="card">
+<h2>Dashboard</h2>
+
+<div class="stats">
+<div class="stat">
+Farmers
+<b id="farmerCount">0</b>
+</div>
+
+<div class="stat">
+Today's Milk
+<b id="milkTotal">0.00 L</b>
+</div>
+
+<div class="stat">
+FAT KG
+<b id="fatTotal">0.000</b>
+</div>
+
+<div class="stat">
+Amount
+<b id="amountTotal">₹0.00</b>
+</div>
+</div>
+</div>
+
+<div id="farmer" class="card hidden">
+<h2>Farmer Master</h2>
+
+<label>Farmer Code</label>
+<input id="farmerCode" placeholder="1001">
+
+<label>Farmer Name</label>
+<input id="farmerName" placeholder="Farmer name">
+
+<label>Mobile Number</label>
+<input id="farmerMobile" inputmode="numeric">
+
+<label>Village</label>
+<input id="farmerVillage">
+
+<label>Cow Rate</label>
+<input id="cowRate" type="number" step="0.01">
+
+<label>Buffalo Rate</label>
+<input id="buffaloRate" type="number" step="0.01">
+
+<label>Commission</label>
+<input id="commission" type="number" step="0.01">
+
+<button class="save" onclick="saveFarmer()">Save Farmer</button>
+</div>
+
+<div id="milk" class="card hidden">
+<h2>Milk Entry</h2>
+
+<label>Date</label>
+<input id="milkDate" type="date">
+
+<label>Shift</label>
+<select id="shift">
+<option>Morning</option>
+<option>Evening</option>
+</select>
+
+<label>Farmer Code</label>
+<input id="milkCode" placeholder="Farmer Code" oninput="findFarmer()">
+
+<label>Farmer Name</label>
+<input id="milkName" readonly>
+
+<label>Animal</label>
+<select id="animal" onchange="findFarmer()">
+<option>Cow</option>
+<option>Buffalo</option>
+</select>
+
+<label>Milk (Litre)</label>
+<input id="milkQty" type="number" step="0.01">
+
+<label>FAT</label>
+<input id="fat" type="number" step="0.01">
+
+<label>SNF</label>
+<input id="snf" type="number" step="0.01">
+
+<label>CLR</label>
+<input id="clr" type="number" step="0.01">
+
+<label>Rate</label>
+<input id="rate" type="number" step="0.01">
+
+<button class="save" onclick="saveMilk()">Save Milk Entry</button>
+</div>
+
+<div id="report" class="card hidden">
+<h2>Daily Collection</h2>
+
+<p>Total Milk: <b id="reportMilk">0.00 L</b></p>
+<p>Total FAT KG: <b id="reportFat">0.000</b></p>
+<p>Total Amount: <b id="reportAmount">₹0.00</b></p>
+</div>
+
+</div>
+
+<script>
+
+let farmers=JSON.parse(localStorage.getItem("farmers")||"[]");
+let milk=JSON.parse(localStorage.getItem("milk")||"[]");
+
+function show(page){
+
+document.getElementById("dashboard").classList.add("hidden");
+document.getElementById("farmer").classList.add("hidden");
+document.getElementById("milk").classList.add("hidden");
+document.getElementById("report").classList.add("hidden");
+
+document.getElementById(page).classList.remove("hidden");
+
+render();
+}
+
+function saveFarmer(){
+
+let code=document.getElementById("farmerCode").value.trim();
+let name=document.getElementById("farmerName").value.trim();
+
+if(!code || !name){
+alert("Farmer Code और Name भरें");
+return;
+}
+
+let farmer={
+code:code,
+name:name,
+mobile:document.getElementById("farmerMobile").value,
+village:document.getElementById("farmerVillage").value,
+cow:+document.getElementById("cowRate").value||0,
+buffalo:+document.getElementById("buffaloRate").value||0,
+commission:+document.getElementById("commission").value||0
+};
+
+farmers=farmers.filter(x=>x.code!==code);
+farmers.push(farmer);
+
+localStorage.setItem("farmers",JSON.stringify(farmers));
+
+alert("Farmer Saved Successfully");
+
+}
+
+function findFarmer(){
+
+let code=document.getElementById("milkCode").value.trim();
+let f=farmers.find(x=>x.code===code);
+
+document.getElementById("milkName").value=f ? f.name : "";
+
+if(f){
+
+let animal=document.getElementById("animal").value;
+
+document.getElementById("rate").value=
+animal==="Cow" ? f.cow : f.buffalo;
+
+}
+
+}
+
+function saveMilk(){
+
+let code=document.getElementById("milkCode").value.trim();
+let f=farmers.find(x=>x.code===code);
+
+if(!f){
+alert("पहले Farmer Master में Farmer बनाइए");
+return;
+}
+
+let q=+document.getElementById("milkQty").value||0;
+let fat=+document.getElementById("fat").value||0;
+let snf=+document.getElementById("snf").value||0;
+let rate=+document.getElementById("rate").value||0;
+let animal=document.getElementById("animal").value;
+
+let amount;
+
+if(animal==="Cow"){
+amount=(fat+snf)*rate/100*q;
+}else{
+amount=fat*rate*q;
+}
+
+milk.push({
+date:document.getElementById("milkDate").value,
+shift:document.getElementById("shift").value,
+code:code,
+name:f.name,
+animal:animal,
+milk:q,
+fat:fat,
+snf:snf,
+clr:+document.getElementById("clr").value||0,
+rate:rate,
+amount:amount
+});
+
+localStorage.setItem("milk",JSON.stringify(milk));
+
+alert("Milk Entry Saved");
+
+document.getElementById("milkCode").value="";
+document.getElementById("milkName").value="";
+document.getElementById("milkQty").value="";
+document.getElementById("fat").value="";
+document.getElementById("snf").value="";
+document.getElementById("clr").value="";
+
+render();
+
+}
+
+function render(){
+
+document.getElementById("farmerCount").innerText=farmers.length;
+
+let today=new Date().toISOString().slice(0,10);
+
+let data=milk.filter(x=>x.date===today);
+
+let totalMilk=data.reduce((a,x)=>a+x.milk,0);
+
+let fatKg=data.reduce((a,x)=>a+(x.milk*x.fat/100),0);
+
+let amount=data.reduce((a,x)=>a+x.amount,0);
+
+document.getElementById("milkTotal").innerText=
+totalMilk.toFixed(2)+" L";
+
+document.getElementById("fatTotal").innerText=
+fatKg.toFixed(3);
+
+document.getElementById("amountTotal").innerText=
+"₹"+amount.toFixed(2);
+
+document.getElementById("reportMilk").innerText=
+totalMilk.toFixed(2)+" L";
+
+document.getElementById("reportFat").innerText=
+fatKg.toFixed(3);
+
+document.getElementById("reportAmount").innerText=
+"₹"+amount.toFixed(2);
+
+}
+
+document.getElementById("milkDate").value=
+new Date().toISOString().slice(0,10);
+
+render();
+
+</script>
+
+</body>
+</html>
