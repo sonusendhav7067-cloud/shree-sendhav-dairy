@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Shree Sendhav Dairy</title>
 
 <style>
@@ -11,81 +11,158 @@ body{
  margin:0;
  font-family:Arial,sans-serif;
  background:#f3f6fa;
- color:#172033;
+ color:#172033
 }
 .header{
- background:#123b73;
- color:white;
+ background:#064b86;
+ color:#fff;
  padding:18px;
- text-align:center;
+ text-align:center
 }
 .header h1{margin:0;font-size:25px}
-.container{padding:15px;max-width:1000px;margin:auto}
+.header p{margin:6px 0 0}
+
+.container{
+ max-width:1100px;
+ margin:auto;
+ padding:15px
+}
 
 .menu{
  display:grid;
  grid-template-columns:repeat(2,1fr);
  gap:10px;
- margin-bottom:15px;
+ margin-bottom:15px
 }
+
 .menu button{
- padding:16px 8px;
  border:0;
  border-radius:10px;
- background:#123b73;
- color:white;
+ padding:15px 5px;
+ background:#064b86;
+ color:#fff;
  font-size:16px;
- font-weight:bold;
+ font-weight:bold
 }
 
 .card{
- background:white;
+ background:#fff;
+ border-radius:14px;
  padding:16px;
- border-radius:12px;
  margin-bottom:15px;
- box-shadow:0 2px 8px #0002;
-}
-
-h2{margin-top:0;color:#123b73}
-
-input,select{
- width:100%;
- padding:12px;
- margin:6px 0 12px;
- border:1px solid #ccd4df;
- border-radius:8px;
- font-size:16px;
-}
-
-.save{
- width:100%;
- padding:14px;
- background:#16833b;
- color:white;
- border:0;
- border-radius:8px;
- font-size:17px;
- font-weight:bold;
+ box-shadow:0 2px 10px #0002
 }
 
 .hidden{display:none}
 
+h2{
+ margin-top:0;
+ color:#064b86
+}
+
+label{
+ display:block;
+ margin-top:8px;
+ font-weight:bold
+}
+
+input,select{
+ width:100%;
+ padding:12px;
+ margin:6px 0 10px;
+ border:1px solid #ccd4df;
+ border-radius:8px;
+ font-size:16px;
+ background:#fff
+}
+
+button{
+ cursor:pointer
+}
+
+.primary{
+ width:100%;
+ padding:13px;
+ border:0;
+ border-radius:8px;
+ background:#07913b;
+ color:white;
+ font-size:17px;
+ font-weight:bold
+}
+
+.secondary{
+ padding:10px 14px;
+ border:0;
+ border-radius:7px;
+ background:#064b86;
+ color:white;
+ font-weight:bold
+}
+
+.danger{
+ padding:8px 10px;
+ border:0;
+ border-radius:6px;
+ background:#c62828;
+ color:white
+}
+
+.edit{
+ padding:8px 10px;
+ border:0;
+ border-radius:6px;
+ background:#ef8b00;
+ color:white
+}
+
 .stats{
  display:grid;
  grid-template-columns:repeat(2,1fr);
- gap:10px;
+ gap:10px
 }
 
 .stat{
- background:#eef4fb;
+ background:#eaf3fc;
  padding:15px;
- border-radius:10px;
+ border-radius:10px
 }
 
 .stat b{
  display:block;
- font-size:23px;
- margin-top:5px;
+ font-size:22px;
+ margin-top:5px
+}
+
+.table-wrap{
+ overflow-x:auto
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+ min-width:700px
+}
+
+th,td{
+ border:1px solid #ddd;
+ padding:9px;
+ text-align:left
+}
+
+th{
+ background:#064b86;
+ color:white
+}
+
+.action-row{
+ display:flex;
+ gap:7px;
+ flex-wrap:wrap
+}
+
+.search{
+ margin-bottom:10px
 }
 
 @media(min-width:700px){
@@ -99,22 +176,25 @@ input,select{
 
 <div class="header">
 <h1>Shree Sendhav Dairy</h1>
-<div>Milk Collection Software</div>
+<p>Milk Collection Software</p>
 </div>
 
 <div class="container">
 
 <div class="menu">
-<button onclick="show('dashboard')">🏠 Dashboard</button>
-<button onclick="show('farmer')">👨‍🌾 Farmer</button>
-<button onclick="show('milk')">🥛 Milk Entry</button>
-<button onclick="show('report')">📊 Reports</button>
+<button onclick="showPage('dashboard')">🏠 Dashboard</button>
+<button onclick="showPage('farmer')">👨‍🌾 Farmer Master</button>
+<button onclick="showPage('milk')">🥛 Milk Entry</button>
+<button onclick="showPage('reports')">📊 Reports</button>
 </div>
+
+<!-- DASHBOARD -->
 
 <div id="dashboard" class="card">
 <h2>Dashboard</h2>
 
 <div class="stats">
+
 <div class="stat">
 Farmers
 <b id="farmerCount">0</b>
@@ -126,46 +206,89 @@ Today's Milk
 </div>
 
 <div class="stat">
-FAT KG
+Today's FAT KG
 <b id="fatTotal">0.000</b>
 </div>
 
 <div class="stat">
-Amount
+Today's Amount
 <b id="amountTotal">₹0.00</b>
 </div>
+
 </div>
 </div>
 
+<!-- FARMER -->
+
 <div id="farmer" class="card hidden">
-<h2>Farmer Master</h2>
+
+<h2>👨‍🌾 Farmer Master</h2>
+
+<input id="editIndex" type="hidden">
 
 <label>Farmer Code</label>
 <input id="farmerCode" placeholder="1001">
 
 <label>Farmer Name</label>
-<input id="farmerName" placeholder="Farmer name">
+<input id="farmerName" placeholder="Farmer Name">
 
 <label>Mobile Number</label>
-<input id="farmerMobile" inputmode="numeric">
+<input id="farmerMobile" type="tel" inputmode="numeric"
+placeholder="10 digit mobile number">
 
 <label>Village</label>
-<input id="farmerVillage">
+<input id="farmerVillage" placeholder="Village">
 
 <label>Cow Rate</label>
-<input id="cowRate" type="number" step="0.01">
+<input id="cowRate" type="number" step="0.01"
+placeholder="Example 9.00">
 
 <label>Buffalo Rate</label>
-<input id="buffaloRate" type="number" step="0.01">
+<input id="buffaloRate" type="number" step="0.01"
+placeholder="Example 9.00">
 
 <label>Commission</label>
-<input id="commission" type="number" step="0.01">
+<input id="commission" type="number" step="0.01"
+placeholder="Example 0.20">
 
-<button class="save" onclick="saveFarmer()">Save Farmer</button>
+<button class="primary" onclick="saveFarmer()">
+💾 Save Farmer
+</button>
+
+<hr>
+
+<h2>Farmer List</h2>
+
+<input class="search" id="farmerSearch"
+placeholder="Search Farmer Code / Name"
+oninput="renderFarmers()">
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Name</th>
+<th>Mobile</th>
+<th>Village</th>
+<th>Cow Rate</th>
+<th>Buffalo Rate</th>
+<th>Commission</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="farmerTable"></tbody>
+</table>
 </div>
 
+</div>
+
+<!-- MILK ENTRY -->
+
 <div id="milk" class="card hidden">
-<h2>Milk Entry</h2>
+
+<h2>🥛 Milk Entry</h2>
 
 <label>Date</label>
 <input id="milkDate" type="date">
@@ -177,7 +300,9 @@ Amount
 </select>
 
 <label>Farmer Code</label>
-<input id="milkCode" placeholder="Farmer Code" oninput="findFarmer()">
+<input id="milkCode"
+placeholder="Enter Farmer Code"
+oninput="findFarmer()">
 
 <label>Farmer Name</label>
 <input id="milkName" readonly>
@@ -203,174 +328,624 @@ Amount
 <label>Rate</label>
 <input id="rate" type="number" step="0.01">
 
-<button class="save" onclick="saveMilk()">Save Milk Entry</button>
+<label>Commission</label>
+<input id="entryCommission" type="number" step="0.01" readonly>
+
+<label>Final Rate</label>
+<input id="finalRate" type="number" step="0.01" readonly>
+
+<button class="primary" onclick="saveMilk()">
+💾 Save Milk Entry
+</button>
+
 </div>
 
-<div id="report" class="card hidden">
-<h2>Daily Collection</h2>
+<!-- REPORTS -->
 
-<p>Total Milk: <b id="reportMilk">0.00 L</b></p>
-<p>Total FAT KG: <b id="reportFat">0.000</b></p>
-<p>Total Amount: <b id="reportAmount">₹0.00</b></p>
+<div id="reports" class="card hidden">
+
+<h2>📊 Reports</h2>
+
+<label>Date</label>
+<input id="reportDate" type="date" onchange="renderReports()">
+
+<label>Shift</label>
+<select id="reportShift" onchange="renderReports()">
+<option value="All">All</option>
+<option>Morning</option>
+<option>Evening</option>
+</select>
+
+<div class="stats">
+
+<div class="stat">
+Milk
+<b id="reportMilk">0.00 L</b>
+</div>
+
+<div class="stat">
+FAT KG
+<b id="reportFat">0.000</b>
+</div>
+
+<div class="stat">
+Amount
+<b id="reportAmount">₹0.00</b>
+</div>
+
+<div class="stat">
+Entries
+<b id="reportEntries">0</b>
+</div>
+
+</div>
+
+<hr>
+
+<h2>Milk Entries</h2>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Shift</th>
+<th>Code</th>
+<th>Farmer</th>
+<th>Animal</th>
+<th>Milk</th>
+<th>FAT</th>
+<th>SNF</th>
+<th>Rate</th>
+<th>Amount</th>
+</tr>
+</thead>
+
+<tbody id="reportTable"></tbody>
+
+</table>
+</div>
+
 </div>
 
 </div>
 
 <script>
 
-let farmers=JSON.parse(localStorage.getItem("farmers")||"[]");
-let milk=JSON.parse(localStorage.getItem("milk")||"[]");
+let farmers =
+JSON.parse(localStorage.getItem("shreeSendhavFarmers") || "[]");
 
-function show(page){
+let milkEntries =
+JSON.parse(localStorage.getItem("shreeSendhavMilk") || "[]");
+
+function today(){
+
+return new Date().toISOString().slice(0,10);
+
+}
+
+function showPage(page){
 
 document.getElementById("dashboard").classList.add("hidden");
 document.getElementById("farmer").classList.add("hidden");
 document.getElementById("milk").classList.add("hidden");
-document.getElementById("report").classList.add("hidden");
+document.getElementById("reports").classList.add("hidden");
 
 document.getElementById(page).classList.remove("hidden");
 
-render();
+renderAll();
+
 }
 
 function saveFarmer(){
 
-let code=document.getElementById("farmerCode").value.trim();
-let name=document.getElementById("farmerName").value.trim();
+let code =
+document.getElementById("farmerCode").value.trim();
+
+let name =
+document.getElementById("farmerName").value.trim();
 
 if(!code || !name){
-alert("Farmer Code और Name भरें");
+
+alert("Farmer Code और Farmer Name भरें");
+
 return;
+
 }
 
 let farmer={
+
 code:code,
 name:name,
-mobile:document.getElementById("farmerMobile").value,
-village:document.getElementById("farmerVillage").value,
-cow:+document.getElementById("cowRate").value||0,
-buffalo:+document.getElementById("buffaloRate").value||0,
-commission:+document.getElementById("commission").value||0
+
+mobile:
+document.getElementById("farmerMobile").value.trim(),
+
+village:
+document.getElementById("farmerVillage").value.trim(),
+
+cow:
+Number(document.getElementById("cowRate").value)||0,
+
+buffalo:
+Number(document.getElementById("buffaloRate").value)||0,
+
+commission:
+Number(document.getElementById("commission").value)||0
+
 };
 
-farmers=farmers.filter(x=>x.code!==code);
+let edit =
+document.getElementById("editIndex").value;
+
+if(edit===""){
+
+let exists =
+farmers.some(x=>x.code===code);
+
+if(exists){
+
+alert("यह Farmer Code पहले से मौजूद है");
+
+return;
+
+}
+
 farmers.push(farmer);
 
-localStorage.setItem("farmers",JSON.stringify(farmers));
+}else{
 
-alert("Farmer Saved Successfully");
+farmers[Number(edit)] = farmer;
+
+document.getElementById("editIndex").value="";
+
+}
+
+localStorage.setItem(
+"shreeSendhavFarmers",
+JSON.stringify(farmers)
+);
+
+alert("Farmer Successfully Saved ✅");
+
+clearFarmerForm();
+
+renderAll();
+
+}
+
+function editFarmer(index){
+
+let f=farmers[index];
+
+document.getElementById("editIndex").value=index;
+
+document.getElementById("farmerCode").value=f.code;
+
+document.getElementById("farmerName").value=f.name;
+
+document.getElementById("farmerMobile").value=f.mobile;
+
+document.getElementById("farmerVillage").value=f.village;
+
+document.getElementById("cowRate").value=f.cow;
+
+document.getElementById("buffaloRate").value=f.buffalo;
+
+document.getElementById("commission").value=f.commission;
+
+window.scrollTo(0,0);
+
+}
+
+function deleteFarmer(index){
+
+if(!confirm("इस Farmer को Delete करना है?")) return;
+
+farmers.splice(index,1);
+
+localStorage.setItem(
+"shreeSendhavFarmers",
+JSON.stringify(farmers)
+);
+
+renderAll();
+
+}
+
+function clearFarmerForm(){
+
+document.getElementById("editIndex").value="";
+
+document.getElementById("farmerCode").value="";
+
+document.getElementById("farmerName").value="";
+
+document.getElementById("farmerMobile").value="";
+
+document.getElementById("farmerVillage").value="";
+
+document.getElementById("cowRate").value="";
+
+document.getElementById("buffaloRate").value="";
+
+document.getElementById("commission").value="";
+
+}
+
+function renderFarmers(){
+
+let search =
+(document.getElementById("farmerSearch")?.value || "")
+.toLowerCase();
+
+let html="";
+
+farmers.forEach((f,i)=>{
+
+if(
+!f.code.toLowerCase().includes(search) &&
+!f.name.toLowerCase().includes(search)
+)return;
+
+html+=`
+
+<tr>
+
+<td>${f.code}</td>
+
+<td>${f.name}</td>
+
+<td>${f.mobile || ""}</td>
+
+<td>${f.village || ""}</td>
+
+<td>₹${f.cow.toFixed(2)}</td>
+
+<td>₹${f.buffalo.toFixed(2)}</td>
+
+<td>₹${f.commission.toFixed(2)}</td>
+
+<td>
+
+<div class="action-row">
+
+<button class="edit"
+onclick="editFarmer(${i})">
+Edit
+</button>
+
+<button class="danger"
+onclick="deleteFarmer(${i})">
+Delete
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+document.getElementById("farmerTable").innerHTML =
+html || `<tr><td colspan="8">No Farmer Found</td></tr>`;
 
 }
 
 function findFarmer(){
 
-let code=document.getElementById("milkCode").value.trim();
-let f=farmers.find(x=>x.code===code);
+let code =
+document.getElementById("milkCode").value.trim();
 
-document.getElementById("milkName").value=f ? f.name : "";
+let f =
+farmers.find(x=>x.code===code);
 
-if(f){
+if(!f){
 
-let animal=document.getElementById("animal").value;
+document.getElementById("milkName").value="";
 
-document.getElementById("rate").value=
-animal==="Cow" ? f.cow : f.buffalo;
+document.getElementById("rate").value="";
+
+document.getElementById("entryCommission").value="";
+
+document.getElementById("finalRate").value="";
+
+return;
 
 }
+
+document.getElementById("milkName").value=f.name;
+
+let animal =
+document.getElementById("animal").value;
+
+let baseRate =
+animal==="Cow" ? f.cow : f.buffalo;
+
+document.getElementById("rate").value =
+baseRate.toFixed(2);
+
+document.getElementById("entryCommission").value =
+f.commission.toFixed(2);
+
+document.getElementById("finalRate").value =
+Math.max(0,baseRate-f.commission).toFixed(2);
 
 }
 
 function saveMilk(){
 
-let code=document.getElementById("milkCode").value.trim();
-let f=farmers.find(x=>x.code===code);
+let code =
+document.getElementById("milkCode").value.trim();
+
+let f =
+farmers.find(x=>x.code===code);
 
 if(!f){
+
 alert("पहले Farmer Master में Farmer बनाइए");
+
 return;
+
 }
 
-let q=+document.getElementById("milkQty").value||0;
-let fat=+document.getElementById("fat").value||0;
-let snf=+document.getElementById("snf").value||0;
-let rate=+document.getElementById("rate").value||0;
-let animal=document.getElementById("animal").value;
+let date =
+document.getElementById("milkDate").value;
 
-let amount;
+let shift =
+document.getElementById("shift").value;
+
+let animal =
+document.getElementById("animal").value;
+
+let qty =
+Number(document.getElementById("milkQty").value)||0;
+
+let fat =
+Number(document.getElementById("fat").value)||0;
+
+let snf =
+Number(document.getElementById("snf").value)||0;
+
+let clr =
+Number(document.getElementById("clr").value)||0;
+
+let rate =
+Number(document.getElementById("rate").value)||0;
+
+let commission =
+Number(document.getElementById("entryCommission").value)||0;
+
+let finalRate =
+Math.max(0,rate-commission);
+
+if(qty<=0){
+
+alert("Milk litre भरें");
+
+return;
+
+}
+
+if(fat<=0){
+
+alert("FAT भरें");
+
+return;
+
+}
+
+let amount=0;
+
+/*
+Cow:
+(FAT + SNF) × 340 / 100 × Milk
+फिर commission rate adjustment
+
+Buffalo:
+Base Rate × FAT × Milk
+फिर commission rate adjustment
+*/
 
 if(animal==="Cow"){
-amount=(fat+snf)*rate/100*q;
+
+amount =
+(fat+snf)*340/100*qty;
+
+amount =
+amount-(commission*qty);
+
 }else{
-amount=fat*rate*q;
+
+amount =
+finalRate*fat*qty;
+
 }
 
-milk.push({
-date:document.getElementById("milkDate").value,
-shift:document.getElementById("shift").value,
+let entry={
+
+id:Date.now(),
+
+date:date,
+
+shift:shift,
+
 code:code,
+
 name:f.name,
+
 animal:animal,
-milk:q,
+
+milk:qty,
+
 fat:fat,
+
 snf:snf,
-clr:+document.getElementById("clr").value||0,
+
+clr:clr,
+
 rate:rate,
+
+commission:commission,
+
+finalRate:finalRate,
+
 amount:amount
-});
 
-localStorage.setItem("milk",JSON.stringify(milk));
+};
 
-alert("Milk Entry Saved");
+milkEntries.push(entry);
+
+localStorage.setItem(
+"shreeSendhavMilk",
+JSON.stringify(milkEntries)
+);
+
+alert("Milk Entry Saved ✅");
+
+clearMilkForm();
+
+renderAll();
+
+}
+
+function clearMilkForm(){
 
 document.getElementById("milkCode").value="";
+
 document.getElementById("milkName").value="";
+
 document.getElementById("milkQty").value="";
+
 document.getElementById("fat").value="";
+
 document.getElementById("snf").value="";
+
 document.getElementById("clr").value="";
 
-render();
+document.getElementById("rate").value="";
+
+document.getElementById("entryCommission").value="";
+
+document.getElementById("finalRate").value="";
 
 }
 
-function render(){
+function getTodayEntries(){
 
-document.getElementById("farmerCount").innerText=farmers.length;
+return milkEntries.filter(x=>x.date===today());
 
-let today=new Date().toISOString().slice(0,10);
+}
 
-let data=milk.filter(x=>x.date===today);
+function renderDashboard(){
 
-let totalMilk=data.reduce((a,x)=>a+x.milk,0);
+let data=getTodayEntries();
 
-let fatKg=data.reduce((a,x)=>a+(x.milk*x.fat/100),0);
+let milk =
+data.reduce((a,x)=>a+x.milk,0);
 
-let amount=data.reduce((a,x)=>a+x.amount,0);
+let fatKg =
+data.reduce((a,x)=>a+(x.milk*x.fat/100),0);
 
-document.getElementById("milkTotal").innerText=
-totalMilk.toFixed(2)+" L";
+let amount =
+data.reduce((a,x)=>a+x.amount,0);
 
-document.getElementById("fatTotal").innerText=
+document.getElementById("farmerCount").innerText =
+farmers.length;
+
+document.getElementById("milkTotal").innerText =
+milk.toFixed(2)+" L";
+
+document.getElementById("fatTotal").innerText =
 fatKg.toFixed(3);
 
-document.getElementById("amountTotal").innerText=
-"₹"+amount.toFixed(2);
-
-document.getElementById("reportMilk").innerText=
-totalMilk.toFixed(2)+" L";
-
-document.getElementById("reportFat").innerText=
-fatKg.toFixed(3);
-
-document.getElementById("reportAmount").innerText=
+document.getElementById("amountTotal").innerText =
 "₹"+amount.toFixed(2);
 
 }
 
-document.getElementById("milkDate").value=
-new Date().toISOString().slice(0,10);
+function renderReports(){
 
-render();
+let date =
+document.getElementById("reportDate").value;
+
+let shift =
+document.getElementById("reportShift").value;
+
+let data=milkEntries.filter(x=>
+x.date===date &&
+(shift==="All" || x.shift===shift)
+);
+
+let milk =
+data.reduce((a,x)=>a+x.milk,0);
+
+let fatKg =
+data.reduce((a,x)=>a+(x.milk*x.fat/100),0);
+
+let amount =
+data.reduce((a,x)=>a+x.amount,0);
+
+document.getElementById("reportMilk").innerText =
+milk.toFixed(2)+" L";
+
+document.getElementById("reportFat").innerText =
+fatKg.toFixed(3);
+
+document.getElementById("reportAmount").innerText =
+"₹"+amount.toFixed(2);
+
+document.getElementById("reportEntries").innerText =
+data.length;
+
+let html="";
+
+data.forEach(x=>{
+
+html+=`
+
+<tr>
+
+<td>${x.date}</td>
+<td>${x.shift}</td>
+<td>${x.code}</td>
+<td>${x.name}</td>
+<td>${x.animal}</td>
+<td>${x.milk.toFixed(2)}</td>
+<td>${x.fat.toFixed(2)}</td>
+<td>${x.snf.toFixed(2)}</td>
+<td>₹${x.finalRate.toFixed(2)}</td>
+<td>₹${x.amount.toFixed(2)}</td>
+
+</tr>
+
+`;
+
+});
+
+document.getElementById("reportTable").innerHTML =
+html || `<tr><td colspan="10">No Entry Found</td></tr>`;
+
+}
+
+function renderAll(){
+
+renderFarmers();
+
+renderDashboard();
+
+renderReports();
+
+}
+
+document.getElementById("milkDate").value=today();
+
+document.getElementById("reportDate").value=today();
+
+renderAll();
 
 </script>
 
